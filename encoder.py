@@ -194,8 +194,11 @@ def train_and_evaluate_model(params):
 
         accuracy = 100 * correct / total
         print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item()}, Validation Accuracy: {accuracy:.2f}%")
+        
+        #Saving checkpoint for each epoch
+        torch.save({'model': model.state_dict(), 'loss': loss.item()}, f"checkpoint/1/model_checkpoint_epoch_{epoch}.pt")
 
-    return accuracy
+    return model
 
 def main():
     # # Define the hyperparameter grid
@@ -233,7 +236,8 @@ def main():
         'learning_rate': 0.001,
         'num_epochs': 20
     }
-    accuracy = train_and_evaluate_model(best_params)
+    model = train_and_evaluate_model(best_params)
+
 
 if __name__ == "__main__":
     main()
