@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
-import tiktoken
+from transformers import AutoTokenizer
 import pandas as pd
 from sklearn.model_selection import train_test_split, ParameterGrid
 import math
@@ -145,17 +145,17 @@ def train_and_evaluate_model(params):
     # Load Dataset
     dataset_df = pd.read_csv('data/formatted.csv')
     
-    tokenizer = tiktoken.get_encoding('gpt2')
+    tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2")
     
     dataset = TextDataset(dataset_df, tokenizer)
-    train_dataset, val_dataset = train_test_split(dataset, test_size=0.1)
+    train_dataset, val_dataset = train_test_split(dataset, test_size=0.1, shuffle=True)
 
     batch_size = params['batch_size']
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, collate_fn=collate_fn)
     
     # Initialize the Transformer model
-    vocab_size = tokenizer.n_vocab
+    vocab_size = tokenizer.vocab_size
     d_model = params['d_model']  # Ensure embed_size matches d_model
     num_heads = params['num_heads']
     d_ff = params['d_ff']
@@ -196,7 +196,7 @@ def train_and_evaluate_model(params):
         print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item()}, Validation Accuracy: {accuracy:.2f}%")
         
         #Saving checkpoint for each epoch
-        torch.save({'model': model.state_dict(), 'loss': loss.item()}, f"checkpoint/1/model_checkpoint_epoch_{epoch}.pt")
+        torch.save({'model': model.state_dict(), 'loss': loss.item()}, f"checkpoint/4/model_checkpoint_epoch_{epoch}.pt")
 
     return model
 
@@ -237,6 +237,7 @@ def main():
         'num_epochs': 20
     }
     model = train_and_evaluate_model(best_params)
+
 
 
 if __name__ == "__main__":

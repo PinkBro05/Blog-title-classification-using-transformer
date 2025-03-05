@@ -9,4 +9,4 @@ Idea to improve:
 
 2. Mixture of Experts (MoE)
 
-3. RoBE instead of Sinusoid
+3. RoBE instead of Sinusoid (Not improve)

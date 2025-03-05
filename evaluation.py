@@ -1,7 +1,7 @@
 import torch
 import pandas as pd
 from encoder import TransformerModel
-import tiktoken
+from transformers import AutoTokenizer
 from sklearn.metrics import precision_score
 
 best_params = {
@@ -18,9 +18,9 @@ best_params = {
 # Initialize the Transformer model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-tokenizer = tiktoken.get_encoding('gpt2')
+tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2")
 
-vocab_size = tokenizer.n_vocab
+vocab_size = tokenizer.vocab_size
 d_model = best_params['d_model']  # Ensure embed_size matches d_model
 num_heads = best_params['num_heads']
 d_ff = best_params['d_ff']
@@ -29,7 +29,7 @@ num_layers = best_params['num_layers']
 dropout = best_params['dropout']
 
 model = TransformerModel(vocab_size, d_model, num_heads, d_ff, output_size, num_layers, dropout).to(device)
-checkpoint = torch.load("checkpoint/1/model_checkpoint_epoch_18.pt")
+checkpoint = torch.load("checkpoint/4/model_checkpoint_epoch_19.pt")
 model.load_state_dict(checkpoint['model'])
 
 def predict_sentence(model, tokenizer, sentence):
@@ -67,4 +67,4 @@ test_df.rename(columns={'_id': 'id'}, inplace=True)
 test_df = test_df.drop('title', axis=1)
 
 # Lưu kết quả vào file CSV
-test_df.to_csv('result/1/your_submissions.csv', index=False)
+test_df.to_csv('result/4/your_submissions.csv', index=False)
