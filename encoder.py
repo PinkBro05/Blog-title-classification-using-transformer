@@ -173,7 +173,15 @@ def train_and_evaluate_model(params):
     num_epochs = params['num_epochs']
     criterion = nn.CrossEntropyLoss(label_smoothing=0.075)
     optimizer = optim.AdamW(model.parameters(), lr=params['learning_rate'], weight_decay=0.01)
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs)
+    
+    # Define the lambda function for the learning rate schedule
+    def lr_lambda(epoch):
+        if epoch < 3:
+            return (epoch + 1) / 3
+        else:
+            return 0.5 * (1 + math.cos(math.pi * (epoch - 3) / (num_epochs - 3)))
+    
+    scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_lambda)
     
     for epoch in range(num_epochs):
         model.train()
