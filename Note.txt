@@ -1,3 +1,0 @@
-chia dataset train/test/validate 
-
-đồ thị hóa loss, accuracy của 3 tập dataset
