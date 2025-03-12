@@ -42,3 +42,6 @@ Technique explored in this project:
 - Data Augmentation: Double translate data(en-vn,vn-en), using Synonym, random delete and insert. This doesn't help improve accuracy much but maybe ChatGPT is not fit with generate synthetic data.
 - Focal Loss: Assign weight to label so that it can deal with imbalanced data.
 - Hyper-parameter tuning: Early stopping, tuning model's parameter, ReduceLROnPLateau 
+
+Things can explore more:
+- Pre-train the model with Vietnamese data
